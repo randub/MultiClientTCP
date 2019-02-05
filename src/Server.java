@@ -3,6 +3,8 @@ import java.net.Socket;
 import org.jsoup.Jsoup;
 import java.net.ServerSocket;
 import java.io.IOException;
+import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -59,7 +61,6 @@ public class Server {
 
 
      class clientThread extends Thread {
-        private String clientName = null;
         private DataInputStream is = null;
         private PrintStream os = null;
         private Socket clientSocket = null;
@@ -87,13 +88,16 @@ public class Server {
                     place = is.readLine();
                     if (place.startsWith("/quit")) {
                         break;
+                    } else if (WorldTimeService.getTime(place).isEmpty()) {
+                        os.println("!! I dont know this city!!");
+                    } else {
+                        String dateTime = WorldTimeService.getTime(place);
+                        os.println("From server: Time in " + place + " is: " + dateTime);
                     }
-                    dateTime = WorldTimeService.getTime(place);
-                    os.println("From server: Time in " + place + " is: " + dateTime);
 
                 }
             } catch (IOException e) {
-                System.err.println("Problems with I/O.");
+                e.printStackTrace();
             }
             os.println("*** Bye ***");
 
@@ -110,6 +114,7 @@ public class Server {
                 // Close streams and socket:
                 is.close();
                 os.close();
+                clientSocket.shutdownOutput();
                 clientSocket.close();
             } catch (IOException e){
                 System.err.println(e);

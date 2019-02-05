@@ -4,8 +4,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Date;
 import java.util.Locale;
 
@@ -33,26 +38,7 @@ public class WorldTimeService {
             toReturn += ", " + dd.text();
         }
 
-        String dato = convertStringToDate(toReturn);
+        return toReturn;
 
-        return dato;
     }
-
-
-    public static String convertStringToDate(String input) {
-
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
-        Date time = null;
-        try {
-            time = new Date();
-            time = formatter.parse(input);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        String strDate = formatter.format(time);
-
-        return strDate;
-    }
-
 }
